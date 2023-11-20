@@ -36,7 +36,7 @@ Base: https://spaia.jp/baseball/npb/api/related_players?player_id=1400101
 ## Same Draft Year
 Base: https://spaia.jp/baseball/npb/api/same_draft_year_players?player_id=1400101
 
-# Schedule
+# Schedule (done)
 
 ## Upcomming Games
 Base: https://spaia.jp/baseball/npb/api/game_schedule
@@ -64,7 +64,7 @@ Base: https://spaia.jp/baseball/npb/api/official_stats_history?GameAssortment=1&
 # Teams
 
 ## Full Team Rosters
-Base: https://spaia.jp/baseball/npb/api/directory?TeamID=2
+Base: https://spaia.jp/baseball/npb/api/directory?TeamID=2&year=2023
 
 ## Batters
 Base: https://spaia.jp/baseball/npb/api/batter_list?team=2&year=2023
@@ -73,10 +73,10 @@ Base: https://spaia.jp/baseball/npb/api/batter_list?team=2&year=2023
 Base: https://spaia.jp/baseball/npb/api/pitcher_list?team=2&year=2023
 
 ## Coaching Staff
-Base: https://spaia.jp/baseball/npb/api/staff_list?team=2
+Base: https://spaia.jp/baseball/npb/api/staff_list?team=2&year=2023
 
 ## Full System: 
-Base: https://spaia.jp/baseball/npb/api/players_by_team?team_id=2
+Base: https://spaia.jp/baseball/npb/api/players_by_team?team_id=2&year=2023
 
 # NPB Draft
 

@@ -1,9 +1,9 @@
-name: Update NPB Schedules
+name: Update NPB Data
 on:
   schedule:
     - cron: "0 12 * * *"
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
   # pull_request:
   #   branches: [main]
 
@@ -34,6 +34,7 @@ jobs:
       - name: run Python Script
         run: |
           python get_npb_schedule.py
+          python get_npb_standings.py
 
       - uses: xresloader/upload-to-github-release@main
         env:
@@ -45,3 +46,13 @@ jobs:
           overwrite: true
           verbose: true
           default_release_name: "Schedule"
+      - uses: xresloader/upload-to-github-release@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: "standings/*"
+          branches: "main"
+          #update_latest_release: true
+          overwrite: true
+          verbose: true
+          default_release_name: "Game_Standings"
