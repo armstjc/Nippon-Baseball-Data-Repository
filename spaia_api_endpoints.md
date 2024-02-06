@@ -53,7 +53,7 @@ Base: https://spaia.jp/baseball/npb/api/game_calendar?year=2023&month=05
 ## Season Schedule
 Base: https://spaia.jp/baseball/npb/api/schedules?Year=2023
 
-# Standings
+# Standings (done)
 
 ## By Game
 Base: https://spaia.jp/baseball/npb/api/official_stats_history?GameAssortment=1&Year=2023

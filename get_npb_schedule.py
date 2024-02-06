@@ -1,12 +1,15 @@
 from datetime import datetime
+import json
+import logging
 import time
 import pandas as pd
+from tqdm import tqdm
 
 
 from utls import get_json_from_url
 
 
-def get_npb_schedule(season: int, save_results=False):
+def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame():
     """
 
     """
@@ -49,7 +52,7 @@ def get_npb_schedule(season: int, save_results=False):
         'last_updated',
         'creation_date'
     ]
-    
+
     url = f"https://spaia.jp/baseball/npb/api/schedules?Year={season}"
     json_data = get_json_from_url(url=url)
 
@@ -92,17 +95,26 @@ def get_npb_schedule(season: int, save_results=False):
 
     sched_df = sched_df[columns]
 
-    if save_results == True:
+    if save_results == True and len(sched_df) > 0:
         sched_df.to_csv(f"schedules/{season}_npb_schedule.csv", index=False)
         sched_df.to_parquet(
             f"schedules/{season}_npb_schedule.parquet", index=False)
+        with open (f"schedules/{season}_npb_schedule.json","w+") as f:
+            f.write(json.dumps(json_data,indent=4))
+    elif len(sched_df) == 0:
+        logging.warning("No data was found. Returning empty dataframe.")
 
     return sched_df
 
 
 if __name__ == "__main__":
     now = datetime.now()
-    for i in range(2017, now.year+1):
+
+    f_year = now.year - 2
+    c_year = now.year + 1
+
+    print("Getting NPB schedule data.")
+    for i in tqdm(range(f_year,c_year)):
         df = get_npb_schedule(
             season=i,
             save_results=True
