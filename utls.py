@@ -1,20 +1,25 @@
+import time
 from datetime import datetime
+
 import requests
 
 
 def get_json_from_url(url: str):
     """ """
     headers = {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+        "AppleWebKit/537.36 (KHTML, like Gecko) " +
+        "Chrome/149.0.0.0 Safari/537.36"
     }
 
     response = requests.get(url, headers=headers)
-
+    time.sleep(1)
     if response.status_code == 200:
         pass
     elif response.status_code == 401:
         raise ConnectionRefusedError(
-            f"Could not connect. The connection was refused.\nHTTP Status Code 401."
+            "Could not connect. The connection was refused." +
+            "\nHTTP Status Code 401."
         )
     else:
         raise ConnectionError(
@@ -24,6 +29,20 @@ def get_json_from_url(url: str):
     json_data = response.json()
 
     return json_data
+
+
+def convert_arm_id(arm_id: int) -> str:
+    """ """
+    if arm_id == 2:
+        return "right"
+    elif arm_id == 1:
+        return "left"
+    elif arm_id == 0:
+        return "switch"
+    elif arm_id == -1:
+        return "left"
+    else:
+        raise ValueError(f"Unhandled Arm ID `{arm_id}`")
 
 
 def convert_numeric(value: str):
@@ -44,10 +63,11 @@ def get_latest_season_year():
     curr_month = curr_date.month
 
     season_start_month = 3
-    season_end_month = 10
+    # season_end_month = 10
 
     latest_season_year = (
-        curr_date.year if curr_month >= season_start_month else curr_date.year - 1
+        curr_date.year if curr_month >= season_start_month
+        else curr_date.year - 1
     )
 
     return latest_season_year

@@ -1,19 +1,25 @@
 import json
 import logging
 import os
+
 import pandas as pd
 from tqdm import tqdm
+
 from utls import (
-    get_json_from_url,
     convert_numeric,
+    get_json_from_url,
     get_latest_season_year,
-    team_ids_list,
+    team_ids_list
 )
 
 logging.basicConfig(level=logging.WARNING)
 
 
-def get_ids_from_pa(team_id: int, pa: int, find_batter: bool = True) -> list[str]:
+def get_ids_from_pa(
+    team_id: int,
+    pa: int,
+    find_batter: bool = True
+) -> list[str]:
     "get a list of ids of players in a team with plate appearance >= pa"
     logging.info("Get list of ids")
 
@@ -22,16 +28,20 @@ def get_ids_from_pa(team_id: int, pa: int, find_batter: bool = True) -> list[str
     player_type = "batter" if find_batter else "pitcher"
     latest_season = get_latest_season_year()
 
-    url = f"https://spaia.jp/baseball/npb/api/{player_type}_list?team={team_id}&year={latest_season}"
+    url = (
+        "https://spaia.jp/baseball/npb/api/" +
+        f"{player_type}_list?team={team_id}&year={latest_season}"
+    )
     players_json = get_json_from_url(url)
     for player in players_json:
         player_pa = player.get("PlateAppearance")
         try:
             if player_pa and int(player_pa) >= pa:
                 id_list.append(player["PlayerCD"])
-        except:
-            print(player.get("Name"), player_pa)
-
+        # except:
+        #     print(player.get("Name"), player_pa)
+        except Exception as e:
+            raise e
     return id_list
 
 
@@ -69,7 +79,10 @@ def get_player_stats(id_list: list[str], save_path: str):
     organized_data = {}
 
     for player_id in id_list:
-        url = f"https://spaia.jp/baseball/npb/api/hitting_stats_by_year?player_id={player_id}"
+        url = (
+            "https://spaia.jp/baseball/npb/api/" +
+            f"hitting_stats_by_year?player_id={player_id}"
+        )
         json_data = get_json_from_url(url)
         player_dict = {"name": json_data[0]["Name"], "stats": {}}
 
@@ -90,7 +103,7 @@ def get_player_stats(id_list: list[str], save_path: str):
     logging.info("Data extracted")
 
     if save_path:  # save if save_path is non-empty
-        with open(save_path, "w") as json_file:
+        with open(save_path, "w+") as json_file:
             json.dump(organized_data, json_file, indent=4)
 
 

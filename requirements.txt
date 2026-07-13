@@ -1,0 +1,7 @@
+pandas>=3.0.3
+numpy>=2.4.0
+cutlet>=0.5.0
+unidic-lite
+tqdm>=4.68.3
+requests>=2.34.2
+pyarrow>=24.0.0

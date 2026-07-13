@@ -1,15 +1,15 @@
-from datetime import datetime
 import json
 import logging
 import time
+from datetime import datetime
+
 import pandas as pd
 from tqdm import tqdm
-
 
 from utls import get_json_from_url
 
 
-def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame():
+def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame:
     """
 
     """
@@ -20,6 +20,7 @@ def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame():
         'SeqNo',
         'game_id',
         'game_kind_id',
+        "game_date",
         'date_jpn',
         'time_jpn',
         'week_day_jpn',
@@ -37,7 +38,7 @@ def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame():
         'home_team_name_en_short',
         'home_team_initial',
         'home_section',
-        'home_text_area',
+        # 'home_text_area',
 
         'away_score',
         'away_team_id',
@@ -46,7 +47,7 @@ def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame():
         'away_team_name_en_short',
         'away_team_initial',
         'away_section',
-        'away_text_area',
+        # 'away_text_area',
 
         'stadium_name_short',
         'last_updated',
@@ -92,15 +93,51 @@ def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame():
             "CreatedAt": "creation_date"
         }, inplace=True
     )
+    sched_df["game_date"] = pd.to_datetime(
+        sched_df["date_jpn"].astype("str") +
+        sched_df["time_jpn"],
+        format="%Y%m%d%H%M"
+    )
+    sched_df["game_date"] = sched_df["game_date"].dt.tz_localize('Asia/Tokyo')
 
     sched_df = sched_df[columns]
-
-    if save_results == True and len(sched_df) > 0:
+    sched_df = sched_df.astype(
+        {
+            "season": "UInt16",
+            "ID": "UInt64",
+            "SeqNo": "UInt8",
+            "game_id": "UInt64",
+            "game_kind_id": "UInt8",
+            "week_day_jpn": "UInt8",
+            "stadium_id": "UInt64",
+            "stadium_name_jpn": "str",
+            "round": "UInt8",
+            "DhF": "Int8",
+            "game_state": "UInt8",
+            "game_result": "UInt8",
+            "home_score": "UInt8",
+            "home_team_id": "UInt64",
+            "home_team_name_en": "str",
+            "home_team_name_en_short": "str",
+            "home_team_initial": "str",
+            "home_section": "Int8",
+            "away_score": "UInt8",
+            "away_team_id": "UInt64",
+            "away_team_name_en": "str",
+            "away_team_name_en_short": "str",
+            "away_team_initial": "str",
+            "away_section": "Int8",
+            "stadium_name_short": "str",
+            "last_updated": "datetime64[ms, UTC]",
+            "creation_date": "datetime64[ms, UTC]",
+        }
+    )
+    if save_results is True and len(sched_df) > 0:
         sched_df.to_csv(f"schedules/{season}_npb_schedule.csv", index=False)
         sched_df.to_parquet(
             f"schedules/{season}_npb_schedule.parquet", index=False)
-        with open (f"schedules/{season}_npb_schedule.json","w+") as f:
-            f.write(json.dumps(json_data,indent=4))
+        with open(f"schedules/{season}_npb_schedule.json", "w+") as f:
+            f.write(json.dumps(json_data, indent=4))
     elif len(sched_df) == 0:
         logging.warning("No data was found. Returning empty dataframe.")
 
@@ -114,7 +151,7 @@ if __name__ == "__main__":
     c_year = now.year + 1
 
     print("Getting NPB schedule data.")
-    for i in tqdm(range(f_year,c_year)):
+    for i in tqdm(range(2018, c_year)):
         df = get_npb_schedule(
             season=i,
             save_results=True
