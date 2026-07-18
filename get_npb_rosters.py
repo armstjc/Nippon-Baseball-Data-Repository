@@ -147,9 +147,9 @@ def get_season_npb_rosters(season: int):
 def main():
     """ """
     now = datetime.now()
-    for i in range(2026, 2017, -1):
-        get_season_npb_rosters(i)
-    # get_season_npb_rosters(now.year)
+    # for i in range(2026, 2017, -1):
+    #     get_season_npb_rosters(i)
+    get_season_npb_rosters(now.year)
 
 
 if __name__ == "__main__":

@@ -653,8 +653,8 @@ def get_npb_pbp_by_season(season: int, month: int = None):
 if __name__ == "__main__":
     now = datetime.now()
 
-    f_year = now.year - 2
-    c_year = now.year + 1
+    # f_year = now.year - 2
+    # c_year = now.year + 1
 
     # # print("Getting NPB Standings data.")
     # for i in range(2023, c_year):

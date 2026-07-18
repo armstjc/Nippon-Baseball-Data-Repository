@@ -33,15 +33,15 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: run Python Script
         run: |
-          python get_npb_pbp.py
+          python get_game_stats.py
 
       - uses: xresloader/upload-to-github-release@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: "rosters/*_npb_rosters.csv"
+          file: "rosters/*_game_stats.csv"
           branches: "main"
           #update_latest_release: true
           overwrite: true
           verbose: true
-          default_release_name: "NPB Rosters"
+          default_release_name: "Player Game Stats"

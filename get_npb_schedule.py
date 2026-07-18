@@ -1,10 +1,10 @@
 import json
 import logging
-import time
+# import time
 from datetime import datetime
 
 import pandas as pd
-from tqdm import tqdm
+# from tqdm import tqdm
 
 from utls import get_json_from_url
 
@@ -147,14 +147,18 @@ def get_npb_schedule(season: int, save_results=False) -> pd.DataFrame:
 if __name__ == "__main__":
     now = datetime.now()
 
-    f_year = now.year - 2
-    c_year = now.year + 1
+    # f_year = now.year - 2
+    # c_year = now.year + 1
 
     print("Getting NPB schedule data.")
-    for i in tqdm(range(2018, c_year)):
-        df = get_npb_schedule(
-            season=i,
-            save_results=True
-        )
-        print(df)
-        time.sleep(1)
+    # for i in tqdm(range(2018, c_year)):
+    #     df = get_npb_schedule(
+    #         season=i,
+    #         save_results=True
+    #     )
+    #     print(df)
+    #     time.sleep(1)
+    df = get_npb_schedule(
+        season=now.year,
+        save_results=True
+    )

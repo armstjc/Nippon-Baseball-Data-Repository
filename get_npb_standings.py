@@ -1,10 +1,10 @@
 import json
 import logging
-import time
+# import time
 from datetime import datetime
 
 import pandas as pd
-from tqdm import tqdm
+# from tqdm import tqdm
 
 from utls import get_json_from_url
 
@@ -66,13 +66,17 @@ def get_npb_standings_by_game(season: int, save_results=False):
 if __name__ == "__main__":
     now = datetime.now()
 
-    f_year = now.year - 2
-    c_year = now.year + 1
+    # f_year = now.year - 2
+    # c_year = now.year + 1
 
     print("Getting NPB Standings data.")
-    for i in tqdm(range(2023, c_year)):
-        get_npb_standings_by_game(
-            season=i,
-            save_results=True
-        )
-        time.sleep(1)
+    # for i in tqdm(range(2023, c_year)):
+    #     get_npb_standings_by_game(
+    #         season=i,
+    #         save_results=True
+    #     )
+    #     time.sleep(1)
+    get_npb_standings_by_game(
+        season=now.year,
+        save_results=True
+    )
