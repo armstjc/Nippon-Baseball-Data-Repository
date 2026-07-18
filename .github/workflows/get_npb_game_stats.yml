@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          file: "rosters/*_game_stats.csv"
+          file: "game_stats/*_game_stats.csv"
           branches: "main"
           #update_latest_release: true
           overwrite: true
