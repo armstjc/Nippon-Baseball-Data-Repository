@@ -6,9 +6,9 @@ Purpose: Download and parse Play by Play (PBP) data for the NPB.
 import json
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from os import mkdir
-from os.path import exists, getmtime
+from os.path import exists
 
 import cutlet
 import pandas as pd
@@ -21,7 +21,7 @@ from utls import convert_arm_id, get_json_from_url
 def get_npb_pbp_by_game(game_id: int):
     """ """
     katsu = cutlet.Cutlet()
-    now = datetime.now
+    # now = datetime.now
     player_mapper_arr = {}
     # x = float('nan')
 
@@ -202,10 +202,9 @@ def get_npb_pbp_by_game(game_id: int):
     # roster_df = get_season_npb_rosters(season)
     # roster_df["player_name"] = roster_df["player_name"].str.replace(" ","")
     directory_url = "https://spaia.jp/baseball/npb/api/directory"
+
     if (
-        exists("rosters/player_directory/directory.json") and
-        getmtime("rosters/player_directory/directory.json") >
-        (now - timedelta(days=1))
+        exists("rosters/player_directory/directory.json")
     ):
         with open("rosters/player_directory/directory.json", "r") as f:
             json_str = f.read()
@@ -213,20 +212,25 @@ def get_npb_pbp_by_game(game_id: int):
         del json_str
     else:
         player_directory = get_json_from_url(directory_url)
+        # with open("rosters/player_directory/directory.json", "w+") as f:
+        #     f.write(json.dumps(player_directory))
 
     del directory_url
 
     for p in player_directory:
-        p_name = p["PlayerName"]
-        p_name = p_name.replace(" ", "")
-        p_name = p_name.replace("　", "")
-        p_name = p_name.replace("\u3000", "")
-
+        # p_name = p["PlayerName"]
+        # p_name = p_name.replace(" ", "")
+        # p_name = p_name.replace("　", "")
+        # p_name = p_name.replace("\u3000", "")
+        p_first_name = p["DelivFirstName"]
+        p_last_name = p["DelivLastName"]
+        p_name = f"{p_first_name}{p_last_name}"
         p_id = p["PersonInfoID"]
         p_id = int(p_id)
 
         player_mapper_arr[p_name] = p_id
 
+        del p_first_name, p_last_name
         del p_id, p_name
 
     # r_name = roster_df["player_name"].to_list()
@@ -597,7 +601,7 @@ def get_npb_pbp_by_season(season: int, month: int = None):
     pbp_df = pd.DataFrame()
     pbp_df_arr = []
     game_df = pd.DataFrame()
-
+    now = datetime.now()
     try:
         mkdir("pbp/individual_games")
     except FileExistsError:
@@ -643,6 +647,7 @@ def get_npb_pbp_by_season(season: int, month: int = None):
         # If there's nothing here, there's nothing to save.
         if len(pbp_df_arr) > 0:
             pbp_df = pd.concat(pbp_df_arr, ignore_index=True)
+            pbp_df["last_updated"] = now.isoformat()
             pbp_df.to_csv(f"pbp/{season}-{m:02}_pbp.csv", index=False)
         else:
             pass
@@ -653,13 +658,13 @@ def get_npb_pbp_by_season(season: int, month: int = None):
 if __name__ == "__main__":
     now = datetime.now()
 
-    # f_year = now.year - 2
-    # c_year = now.year + 1
+    f_year = now.year - 2
+    c_year = now.year + 1
 
-    # # print("Getting NPB Standings data.")
-    # for i in range(2023, c_year):
-    #     get_npb_pbp_by_season(season=i)
-    #     time.sleep(1)
+    # print("Getting NPB Standings data.")
+    for i in range(2026, c_year):
+        get_npb_pbp_by_season(season=i)
+        time.sleep(1)
 
     # If first or second day of the month,
     # get the previous month's PBP data

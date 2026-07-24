@@ -106,7 +106,7 @@ Base: https://spaia.jp/baseball/npb/api/current_score?game_id=2021014362
 ## Starting Lineups
 Base: https://spaia.jp/baseball/npb/api/starting_members_for_flash?gameId=2021014362
 
-## Pitch-by-picth data
+## Pitch-by-pitch data
 Base: https://spaia.jp/baseball/npb/api/flash_atbat_history?gameId=2021014362
 
 ## Play-by-play data
