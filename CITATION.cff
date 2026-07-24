@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use any code or data from this repository, please cite it as below."
+authors:
+  - family-names: "Armstrong"
+  - given-names: "Joseph"
+title: "Nippon Baseball Data Repository"
+version: 1.0
+date-released: 2026-07-24
+url: https://github.com/armstjc/Nippon-Baseball-Data-Repository/tree/main
