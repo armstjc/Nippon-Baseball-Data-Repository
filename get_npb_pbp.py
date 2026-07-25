@@ -661,10 +661,10 @@ if __name__ == "__main__":
     f_year = now.year - 2
     c_year = now.year + 1
 
-    # print("Getting NPB Standings data.")
-    for i in range(2026, c_year):
-        get_npb_pbp_by_season(season=i)
-        time.sleep(1)
+    # # print("Getting NPB Standings data.")
+    # for i in range(2026, c_year):
+    #     get_npb_pbp_by_season(season=i)
+    #     time.sleep(1)
 
     # If first or second day of the month,
     # get the previous month's PBP data
