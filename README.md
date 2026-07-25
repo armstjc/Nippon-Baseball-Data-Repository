@@ -23,9 +23,8 @@ Most of the data for this repository is largely sourced from [SPAIA](https://spa
 
 GitHub (and by extension most Git implementations) struggles to properly handle changes to binary files, and changes to large (25+ MB) files if you're constantly making changes to files.
 
-If you want a more in-depth explanation, [@tanho63](https://github.com/tanho63)'s _Project Immortality: Using GitHub To Make Your Work Live Forever_ talk during Posit (2022) goes a bit more into detail about some of the technical reasons why this is the case.
+If you want a more in-depth explanation, [@tanho63](https://github.com/tanho63)'s [_Project Immortality: Using GitHub To Make Your Work Live Forever_](https://www.youtube.com/embed/wzcz4xNGeTI?si=FhkQbiNGhFuEqvRg) talk during Posit (2022) goes a bit more into detail about some of the technical reasons why this is the case.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/wzcz4xNGeTI?si=FhkQbiNGhFuEqvRg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## How to contribute
 If you would like for a feature to be added, or for a bug to be fixed [you can open an issue](https://github.com/armstjc/Nippon-Baseball-Data-Repository/issues) so that it can be put under consideration.
