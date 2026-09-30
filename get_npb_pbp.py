@@ -613,9 +613,12 @@ def get_npb_pbp_by_season(season: int, month: int = None):
 
     sched_df = get_npb_schedule(season=season)
     sched_df = sched_df.sample(frac=1)
+    # game_result 3 is a tie, including official 0-0 games.
+    # A bare score >= 0 would also include no-games stopped at 0-0.
     sched_df = sched_df[
         (sched_df["home_score"] > 0) |
-        (sched_df["away_score"] > 0)
+        (sched_df["away_score"] > 0) |
+        (sched_df["game_result"] == 3)
     ]
 
     game_ids_arr = sched_df["game_id"].to_numpy()

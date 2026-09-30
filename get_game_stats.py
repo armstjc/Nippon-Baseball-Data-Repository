@@ -304,9 +304,12 @@ def get_season_game_stats(season: int, month: int = None):
 
     sched_df = get_npb_schedule(season=season)
     sched_df = sched_df.sample(frac=1)
+    # game_result 3 is a tie, including official 0-0 games.
+    # A bare score >= 0 would also include no-games stopped at 0-0.
     sched_df = sched_df[
         (sched_df["home_score"] > 0) |
-        (sched_df["away_score"] > 0)
+        (sched_df["away_score"] > 0) |
+        (sched_df["game_result"] == 3)
     ]
     sched_df["month"] = pd.DatetimeIndex(sched_df["game_date"]).month
     if month is not None:
