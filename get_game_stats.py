@@ -331,6 +331,13 @@ def get_season_game_stats(season: int, month: int = None):
             game_id = game_ids_arr[i]
             game_date = game_dates_arr[i]
             game_df = get_game_stats(game_id=game_id, game_date=game_date)
+
+            if (
+                game_df is None or
+                len(game_df) == 0
+            ):
+                continue
+
             game_df["player_name_jap"] = game_df[
                 "player_name_jap"
             ].str.replace(
@@ -340,6 +347,9 @@ def get_season_game_stats(season: int, month: int = None):
             del game_df
 
         game_stats_df = pd.concat(game_stats_df_arr, ignore_index=True)
+        game_stats_df = game_stats_df.sort_values(
+            by=["season", "game_id", "game_date", "player_id"]
+        )
         game_stats_df.to_csv(
             f"game_stats/{season}-{m:02}_game_stats.csv",
             index=False
@@ -351,7 +361,7 @@ def main():
     """ """
     now = datetime.now()
 
-    # f_year = now.year - 2
+    # f_year = 2019
     # c_year = now.year + 1
 
     print("Getting NPB game stats data.")

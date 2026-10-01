@@ -356,188 +356,193 @@ def get_npb_pbp_by_game(game_id: int):
     pitch_box_location_json = get_json_from_url(pitch_box_location_url)
     pitch_location_df = pd.json_normalize(pitch_box_location_json)
 
-    pitch_location_df = pitch_location_df.astype(
-        {
-            "ID": "Int64",
-            "gameId": "Int64",
-            "atBatBallCount": "Int16",
-            "ballSpeed": "Int16",
-            "ballKind": "Int16",
-            "x": "Int16",
-            "y": "Int16",
-            "presult": "Int16",
-            "bresult": "Int16",
-            "pitId": "Int64",
-            "pitLR": "Int16",
-            "batId": "Int64",
-            "batLR": "Int16",
-            "battedX": "Int16",
-            "battedY": "Int16",
-            "ballCatcherId": "Int64",
-            "ballCatcherName": "str",
-            "ballCatcherPositionId": "Int8",
-            "ballCatcherNum": "Int16",
-            "addedRuns": "Int8",
-            "UpdatedAt": "datetime64[ms, UTC]",
-            "CreatedAt": "datetime64[ms, UTC]",
-        }
-    )
-    pitch_location_df["page"] = pitch_location_df[
-        "fiveDigitSerialNumber"
-    ] + pitch_location_df[
-        "atBatBallCount"
-    ].astype("str").str.pad(2, fillchar="0")
+    if len(pitch_location_df) > 0:
+        pitch_location_df = pitch_location_df.astype(
+            {
+                "ID": "Int64",
+                "gameId": "Int64",
+                "atBatBallCount": "Int16",
+                "ballSpeed": "Int16",
+                "ballKind": "Int16",
+                "x": "Int16",
+                "y": "Int16",
+                "presult": "Int16",
+                "bresult": "Int16",
+                "pitId": "Int64",
+                "pitLR": "Int16",
+                "batId": "Int64",
+                "batLR": "Int16",
+                "battedX": "Int16",
+                "battedY": "Int16",
+                "ballCatcherId": "Int64",
+                "ballCatcherName": "str",
+                "ballCatcherPositionId": "Int8",
+                "ballCatcherNum": "Int16",
+                "addedRuns": "Int8",
+                "UpdatedAt": "datetime64[ms, UTC]",
+                "CreatedAt": "datetime64[ms, UTC]",
+            }
+        )
+        pitch_location_df["page"] = pitch_location_df[
+            "fiveDigitSerialNumber"
+        ] + pitch_location_df[
+            "atBatBallCount"
+        ].astype("str").str.pad(2, fillchar="0")
 
-    pitch_location_df["pitcher_hand"] = pitch_location_df[
-        "pitLR"
-    ].map(convert_arm_id)
-    pitch_location_df["batter_hand"] = pitch_location_df[
-        "batLR"
-    ].map(convert_arm_id)
-    pitch_location_df.rename(
-        columns={
-            "gameId": "game_id",
-            "atBatBallCount": "pitch_number",
-            "ballSpeed": "release_speed_kmh",
-            "ballKind": "pitch_id",
-            "x": "plate_x",
-            "y": "plate_y",
-            "pitId": "pitcher",
-            "batId": "batter",
-            "battedX": "hc_x",
-            "battedY": "hc_y",
-            "ballCatcherId": "fielder",
-            "ballCatcherName": "fielder_name",
-            "ballCatcherPositionId": "hit_location",
-        },
-        inplace=True,
-    )
+        pitch_location_df["pitcher_hand"] = pitch_location_df[
+            "pitLR"
+        ].map(convert_arm_id)
+        pitch_location_df["batter_hand"] = pitch_location_df[
+            "batLR"
+        ].map(convert_arm_id)
+        pitch_location_df.rename(
+            columns={
+                "gameId": "game_id",
+                "atBatBallCount": "pitch_number",
+                "ballSpeed": "release_speed_kmh",
+                "ballKind": "pitch_id",
+                "x": "plate_x",
+                "y": "plate_y",
+                "pitId": "pitcher",
+                "batId": "batter",
+                "battedX": "hc_x",
+                "battedY": "hc_y",
+                "ballCatcherId": "fielder",
+                "ballCatcherName": "fielder_name",
+                "ballCatcherPositionId": "hit_location",
+            },
+            inplace=True,
+        )
 
-    pitch_location_df.loc[
-        pitch_location_df["release_speed_kmh"] < 1,
-        "release_speed_kmh"
-    ] = (
-        None
-    )
-    pitch_location_df["release_speed_mph"] = (
-        pitch_location_df["release_speed_kmh"] / 1.609
-    )
-    pitch_location_df.loc[pitch_location_df["pitch_id"] < 1, "pitch_id"] = None
-    pitch_location_df.loc[pitch_location_df["plate_x"] < 0, "plate_x"] = None
-    pitch_location_df.loc[pitch_location_df["plate_y"] < 0, "plate_y"] = None
-    pitch_location_df.loc[pitch_location_df["hc_x"] < 0, "hc_x"] = None
-    pitch_location_df.loc[pitch_location_df["hc_y"] < 0, "hc_y"] = None
-    pitch_location_df.loc[pitch_location_df["fielder"] < 0, "fielder"] = None
-    pitch_location_df.loc[
-        pitch_location_df["hit_location"] < 0,
-        "hit_location"
-    ] = None
-    pitch_location_df.drop(
-        columns=["ID", "UpdatedAt", "CreatedAt", "batLR", "pitLR"],
-        inplace=True
-    )
-    pbp_df = pbp_df.merge(
-        right=pitch_location_df,
-        on=["game_id", "page"],
-        how="left"
-    )
+        pitch_location_df.loc[
+            pitch_location_df["release_speed_kmh"] < 1,
+            "release_speed_kmh"
+        ] = (
+            None
+        )
+        pitch_location_df["release_speed_mph"] = (
+            pitch_location_df["release_speed_kmh"] / 1.609
+        )
+        pitch_location_df.loc[pitch_location_df["pitch_id"] < 1, "pitch_id"] = None
+        pitch_location_df.loc[pitch_location_df["plate_x"] < 0, "plate_x"] = None
+        pitch_location_df.loc[pitch_location_df["plate_y"] < 0, "plate_y"] = None
+        pitch_location_df.loc[pitch_location_df["hc_x"] < 0, "hc_x"] = None
+        pitch_location_df.loc[pitch_location_df["hc_y"] < 0, "hc_y"] = None
+        pitch_location_df.loc[pitch_location_df["fielder"] < 0, "fielder"] = None
+        pitch_location_df.loc[
+            pitch_location_df["hit_location"] < 0,
+            "hit_location"
+        ] = None
+        pitch_location_df.drop(
+            columns=["ID", "UpdatedAt", "CreatedAt", "batLR", "pitLR"],
+            inplace=True
+        )
+
+        pbp_df = pbp_df.merge(
+            right=pitch_location_df,
+            on=["game_id", "page"],
+            how="left"
+        )
 
     strike_ball_count_json = get_json_from_url(strike_ball_count_url)
     strike_ball_count_df = pd.json_normalize(strike_ball_count_json)
 
-    strike_ball_count_df.rename(
-        columns={
-            "gameId": "game_id",
-            "strike": "strikes",
-            "ball": "balls",
-            "out": "outs_when_up",
-        },
-        inplace=True,
-    )
-    strike_ball_count_df.drop(
-        columns=["ID", "timingId", "UpdatedAt", "CreatedAt"], inplace=True
-    )
-    strike_ball_count_df = strike_ball_count_df.astype(
-        {
-            "game_id": "UInt64",
-            "page": "str",
-            "strikes": "UInt8",
-            "balls": "UInt8",
-            "outs_when_up": "UInt8",
-        }
-    )
-    pbp_df = pbp_df.merge(
-        right=strike_ball_count_df, on=["game_id", "page"], how="left"
-    )
+    if len(strike_ball_count_df) > 0:
+        strike_ball_count_df.rename(
+            columns={
+                "gameId": "game_id",
+                "strike": "strikes",
+                "ball": "balls",
+                "out": "outs_when_up",
+            },
+            inplace=True,
+        )
+        strike_ball_count_df.drop(
+            columns=["ID", "timingId", "UpdatedAt", "CreatedAt"], inplace=True
+        )
+        strike_ball_count_df = strike_ball_count_df.astype(
+            {
+                "game_id": "UInt64",
+                "page": "str",
+                "strikes": "UInt8",
+                "balls": "UInt8",
+                "outs_when_up": "UInt8",
+            }
+        )
+        pbp_df = pbp_df.merge(
+            right=strike_ball_count_df, on=["game_id", "page"], how="left"
+        )
 
     on_base_json = get_json_from_url(on_base_url)
     on_base_df = pd.json_normalize(on_base_json)
+    if len(on_base_df) > 0:
+        on_base_df.drop(
+            columns=["ID", "timingId", "UpdatedAt", "CreatedAt"],
+            inplace=True
+        )
+        on_base_df.rename(
+            columns={
+                "gameId": "game_id",
+                "firstRunnnerName": "on_1b_name",
+                "secondRunnnerName": "on_2b_name",
+                "thirdRunnnerName": "on_3b_name",
+            },
+            inplace=True,
+        )
+        on_base_df = on_base_df.astype(
+            {
+                "game_id": "UInt64",
+                "on_1b_name": "str",
+                "on_2b_name": "str",
+                "on_3b_name": "str",
+            }
+        )
 
-    on_base_df.drop(
-        columns=["ID", "timingId", "UpdatedAt", "CreatedAt"],
-        inplace=True
-    )
-    on_base_df.rename(
-        columns={
-            "gameId": "game_id",
-            "firstRunnnerName": "on_1b_name",
-            "secondRunnnerName": "on_2b_name",
-            "thirdRunnnerName": "on_3b_name",
-        },
-        inplace=True,
-    )
-    on_base_df = on_base_df.astype(
-        {
-            "game_id": "UInt64",
-            "on_1b_name": "str",
-            "on_2b_name": "str",
-            "on_3b_name": "str",
-        }
-    )
-
-    pbp_df = pbp_df.merge(right=on_base_df, on=["game_id", "page"], how="left")
+        pbp_df = pbp_df.merge(right=on_base_df, on=["game_id", "page"], how="left")
 
     fielders_json = get_json_from_url(fielders_url)
     fielders_df = pd.json_normalize(fielders_json)
 
-    fielders_df.drop(
-        columns=["ID", "timingId", "UpdatedAt", "CreatedAt", "dhPlayerName"],
-        inplace=True,
-    )
-    fielders_df.rename(
-        columns={
-            "gameId": "game_id",
-            "pitcherPlayerPlayerName": "fielder_1_name",
-            "catcherPlayerName": "fielder_2_name",
-            "firstPlayerName": "fielder_3_name",
-            "secondPlayerName": "fielder_4_name",
-            "thirdPlayerName": "fielder_5_name",
-            "shortPlayerName": "fielder_6_name",
-            "leftPlayerName": "fielder_7_name",
-            "centerPlayerName": "fielder_8_name",
-            "rightPlayerName": "fielder_9_name",
-        },
-        inplace=True,
-    )
-    fielders_df = fielders_df.astype(
-        {
-            "game_id": "UInt64",
-            "fielder_1_name": "str",
-            "fielder_2_name": "str",
-            "fielder_3_name": "str",
-            "fielder_4_name": "str",
-            "fielder_5_name": "str",
-            "fielder_6_name": "str",
-            "fielder_7_name": "str",
-            "fielder_8_name": "str",
-            "fielder_9_name": "str",
-        }
-    )
-    pbp_df = pbp_df.merge(
-        right=fielders_df,
-        on=["game_id", "page"],
-        how="left"
-    )
+    if len(fielders_df) > 0:
+        fielders_df.drop(
+            columns=["ID", "timingId", "UpdatedAt", "CreatedAt", "dhPlayerName"],
+            inplace=True,
+        )
+        fielders_df.rename(
+            columns={
+                "gameId": "game_id",
+                "pitcherPlayerPlayerName": "fielder_1_name",
+                "catcherPlayerName": "fielder_2_name",
+                "firstPlayerName": "fielder_3_name",
+                "secondPlayerName": "fielder_4_name",
+                "thirdPlayerName": "fielder_5_name",
+                "shortPlayerName": "fielder_6_name",
+                "leftPlayerName": "fielder_7_name",
+                "centerPlayerName": "fielder_8_name",
+                "rightPlayerName": "fielder_9_name",
+            },
+            inplace=True,
+        )
+        fielders_df = fielders_df.astype(
+            {
+                "game_id": "UInt64",
+                "fielder_1_name": "str",
+                "fielder_2_name": "str",
+                "fielder_3_name": "str",
+                "fielder_4_name": "str",
+                "fielder_5_name": "str",
+                "fielder_6_name": "str",
+                "fielder_7_name": "str",
+                "fielder_8_name": "str",
+                "fielder_9_name": "str",
+            }
+        )
+        pbp_df = pbp_df.merge(
+            right=fielders_df,
+            on=["game_id", "page"],
+            how="left"
+        )
+
     # pbp_df["description"] = pbp_df["description_jap"].map(translate_stuff)
     pbp_df.drop(columns=["game_state_id"], inplace=True)
 
@@ -661,11 +666,11 @@ def get_npb_pbp_by_season(season: int, month: int = None):
 if __name__ == "__main__":
     now = datetime.now()
 
-    f_year = now.year - 2
-    c_year = now.year + 1
+    # f_year = 2019
+    # c_year = now.year + 1
 
-    # # print("Getting NPB Standings data.")
-    # for i in range(2026, c_year):
+    # print("Getting NPB PBP data.")
+    # for i in range(f_year, c_year):
     #     get_npb_pbp_by_season(season=i)
     #     time.sleep(1)
 
