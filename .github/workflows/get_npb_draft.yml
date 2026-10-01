@@ -44,4 +44,4 @@ jobs:
           #update_latest_release: true
           overwrite: true
           verbose: true
-          default_release_name: "PBP"
+          default_release_name: "NPB Draft"
