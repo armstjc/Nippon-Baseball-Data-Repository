@@ -11,6 +11,7 @@ from os import mkdir
 from os.path import exists
 
 import cutlet
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
@@ -357,6 +358,11 @@ def get_npb_pbp_by_game(game_id: int):
     pitch_location_df = pd.json_normalize(pitch_box_location_json)
 
     if len(pitch_location_df) > 0:
+        pitch_location_df = pitch_location_df.replace(
+            r'^\s*$',
+            np.nan,
+            regex=True
+        )
         pitch_location_df = pitch_location_df.astype(
             {
                 "ID": "Int64",
