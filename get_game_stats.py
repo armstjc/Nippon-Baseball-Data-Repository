@@ -361,13 +361,13 @@ def main():
     """ """
     now = datetime.now()
 
-    # f_year = 2019
-    # c_year = now.year + 1
+    f_year = 2019
+    c_year = now.year + 1
 
     print("Getting NPB game stats data.")
-    # for i in range(f_year, c_year):
-    #     get_season_game_stats(season=i)
-    #     # time.sleep(1)
+    for i in range(f_year, c_year):
+        get_season_game_stats(season=i)
+        # time.sleep(1)
     if now.day <= 2:
         get_season_game_stats(
             season=now.year,

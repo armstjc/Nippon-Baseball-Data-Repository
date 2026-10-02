@@ -4,9 +4,14 @@ Holds public data for the Nippon Professional Baseball (NPB) League, a professio
 
 ## Data
 
-This repository will consistently refresh
+This repository will consistently refresh data from the NPB, and store the most recent versions of any data points in individual releases.
 Data is housed in individual releases due to ease of use, and can be accessed below.
+
+### NOTE: 
 Most of the data for this repository is largely sourced from [SPAIA](https://spaia.jp/), a Japanese sports website that just happens to have a treasure trove of NPB stats and information.
+
+Additionally, for the most up to date data for the NPB, use the data in the releases!
+Any data in the actual repo is only there for show, and will only be refreshed when a season has ended, or if there is a serious data error found in previous seasons.
 
 ## Data Endpoints
 
